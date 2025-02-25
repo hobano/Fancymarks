@@ -92,3 +92,7 @@ function displayBookmarks(dials) {
         grid.appendChild(div);
     });
 }
+function toggleMenu() {
+    const menu = document.getElementById("settingsButton");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
