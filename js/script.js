@@ -1,36 +1,50 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Ensure elements exist before adding event listeners
+    const fileInput = document.getElementById("fileInput");
+    if (fileInput) {
+        fileInput.addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    localStorage.setItem("speedDialData", JSON.stringify(data));
+                    setupTabs(data.record.groups, data.record.dials);
+                } catch (error) {
+                    console.error("Error parsing JSON file:", error);
+                }
+            };
+            reader.readAsText(file);
+        });
+    }
+
+    // Load bookmarks from JSONBin.io
     loadSavedData();
 });
 
-document.getElementById("fileInput").addEventListener("change", function (event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        const data = JSON.parse(e.target.result);
-        localStorage.setItem("speedDialData", JSON.stringify(data)); // Save to localStorage
-        setupTabs(data.groups, data.dials);
-    };
-    reader.readAsText(file);
-});
-
-document.getElementById("resetData").addEventListener("click", function () {
-    localStorage.removeItem("speedDialData");
-    document.getElementById("tabContainer").innerHTML = "";
-    document.getElementById("bookmarkGrid").innerHTML = "";
-});
-
+// Fetch JSON from JSONBin.io and update bookmarks
 function loadSavedData() {
-    const savedData = localStorage.getItem("speedDialData");
-    if (savedData) {
-        const data = JSON.parse(savedData);
-        setupTabs(data.groups, data.dials);
-    }
+    fetch("https://api.jsonbin.io/v3/b/67bde15fad19ca34f811bd2d/latest")
+        .then(response => response.json())
+        .then(data => {
+            if (data.record && data.record.groups && data.record.dials) {
+                setupTabs(data.record.groups, data.record.dials);
+            } else {
+                console.error("JSON structure is incorrect:", data);
+            }
+        })
+        .catch(error => console.error("Error loading bookmarks:", error));
 }
 
+// Set up tabs dynamically from JSON data
 function setupTabs(groups, dials) {
     const tabWrapper = document.getElementById("tabWrapper");
+    if (!tabWrapper) {
+        console.error("Tab wrapper not found");
+        return;
+    }
     tabWrapper.innerHTML = "";
 
     groups.forEach((group, index) => {
@@ -53,17 +67,13 @@ function setupTabs(groups, dials) {
     }
 }
 
-// Smooth scrolling for tabs
-document.getElementById("tabLeftArrow").addEventListener("click", () => {
-    document.getElementById("tabWrapper").scrollBy({ left: -200, behavior: "smooth" });
-});
-
-document.getElementById("tabRightArrow").addEventListener("click", () => {
-    document.getElementById("tabWrapper").scrollBy({ left: 200, behavior: "smooth" });
-});
-
+// Display bookmarks in the grid
 function displayBookmarks(dials) {
     const grid = document.getElementById("bookmarkGrid");
+    if (!grid) {
+        console.error("Bookmark grid not found");
+        return;
+    }
     grid.innerHTML = "";
 
     dials.forEach(dial => {
@@ -71,32 +81,9 @@ function displayBookmarks(dials) {
         div.className = "bookmark";
 
         const img = document.createElement("img");
-        img.src = dial.thumbnail || "https://placehold.co/150x100";
+        img.src = dial.thumbnail || "https://placehold.co/100x100";
         img.alt = dial.title;
-        img.onerror = () => { img.src = "https://placehold.co/150x100"; };
-
-        const link = document.createElement("a");
-        link.href = dial.url;
-        link.target = "_blank";
-        link.textContent = dial.title;
-
-        div.appendChild(img);
-        div.appendChild(link);
-        grid.appendChild(div);
-    });
-}
-function displayBookmarks(dials) {
-    const grid = document.getElementById("bookmarkGrid");
-    grid.innerHTML = "";
-
-    dials.forEach(dial => {
-        const div = document.createElement("div");
-        div.className = "bookmark";
-
-        const img = document.createElement("img");
-        img.src = dial.thumbnail || "https://placehold.co/150x100";
-        img.alt = dial.title;
-        img.onerror = () => { img.src = "https://placehold.co/150x100"; };
+        img.onerror = () => { img.src = "https://placehold.co/100x100"; };
         img.addEventListener("click", () => {
             window.open(dial.url, "_blank");
         });
@@ -105,15 +92,3 @@ function displayBookmarks(dials) {
         grid.appendChild(div);
     });
 }
-function loadSavedData() {
-    fetch("https://api.jsonbin.io/v3/b/67bde15fad19ca34f811bd2d/latest") // Fetch latest JSON data
-        .then(response => response.json())
-        .then(data => {
-            setupTabs(data.record.groups, data.record.dials); // Adjust for JSON structure
-        })
-        .catch(error => console.error("Error loading bookmarks:", error));
-}
-fetch("NEW_JSONBIN_URL/latest")
-    .then(response => response.json())
-    .then(data => console.log("New JSONBin Success:", data))
-    .catch(error => console.error("Fetch Error:", error));
