@@ -47,3 +47,20 @@
         padding: 8px;
     }
 }
+/* Hamburger icon for mobile */
+.hamburger {
+    display: none;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .hamburger {
+        display: block;
+    }
+
+    /* Hide settings button in mobile view */
+    #settingsButton {
+        display: none;
+    }
+}
