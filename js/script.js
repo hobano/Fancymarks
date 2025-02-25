@@ -105,3 +105,15 @@ function displayBookmarks(dials) {
         grid.appendChild(div);
     });
 }
+function loadSavedData() {
+    fetch("https://api.jsonbin.io/v3/b/67bde15fad19ca34f811bd2d/latest") // Fetch latest JSON data
+        .then(response => response.json())
+        .then(data => {
+            setupTabs(data.record.groups, data.record.dials); // Adjust for JSON structure
+        })
+        .catch(error => console.error("Error loading bookmarks:", error));
+}
+fetch("NEW_JSONBIN_URL/latest")
+    .then(response => response.json())
+    .then(data => console.log("New JSONBin Success:", data))
+    .catch(error => console.error("Fetch Error:", error));
