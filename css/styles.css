@@ -1,145 +1,49 @@
-body {
-    background-color: #121212;
-    color: #ffffff;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-}
-
-/* Make everything fit well on mobile */
-.container {
-    width: 95%;
-    max-width: 1200px;
-    margin: auto;
-    padding: 10px;
-}
-
-/* Buttons */
-input, button, a {
-    background: #1e1e1e;
-    color: #ffffff;
-    border: 1px solid #444;
-    padding: 6px 12px;
-    font-size: 14px;
-    margin: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    border-radius: 4px;
-}
-
-button:hover, a:hover {
-    background: #333;
-}
-
-/* TABS */
-#tabContainer {
-    display: flex;
-    align-items: center;
-    background: #222;
-    padding: 5px;
-    border-radius: 6px;
-    margin-bottom: 10px;
-    position: relative;
-    overflow: hidden;
-}
-
-#tabWrapper {
-    display: flex;
-    overflow-x: hidden; /* No visible scrollbar */
-    scroll-behavior: smooth;
-    white-space: nowrap;
-    flex-grow: 1;
-}
-
-.tab {
-    background: #333;
-    padding: 6px 12px;
-    margin: 2px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background 0.2s;
-}
-
-.tab:hover {
-    background: #444;
-}
-
-.tab.active {
-    background: #ffcc00;
-    color: #121212;
-}
-
-/* SCROLL ARROWS */
-.arrow {
-    background: #444;
-    color: white;
-    padding: 6px 12px;
-    cursor: pointer;
-    user-select: none;
-    font-size: 18px;
-    border-radius: 4px;
-}
-
-.arrow:hover {
-    background: #555;
-}
-
-/* BOOKMARK GRID */
-#bookmarkGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Adjusts to screen size */
-    gap: 10px;
-    justify-content: center;
-}
-
-/* Bookmark container */
-.bookmark {
-    width: 100px; /* Set a fixed width */
-    height: 100px; /* Set a fixed height */
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 6px;
-    background: #1e1e1e;
-    position: relative;
-}
-
-/* Images inside bookmarks */
-.bookmark img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Crop instead of stretching */
-    cursor: pointer;
-}
-
-/* Hover effect - slight zoom */
-.bookmark:hover img {
-    transform: scale(1.05);
-}
-
-/* Mobile Optimization */
+/* Make everything fit better on mobile */
 @media (max-width: 768px) {
-    #bookmarkGrid {
-        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Smaller icons for mobile */
-        gap: 8px;
+    body {
+        padding: 0;
+        margin: 0;
     }
 
+    .container {
+        width: 95%;
+        padding: 10px;
+    }
+
+    /* Tabs adjusted for mobile - stack them vertically */
+    #tabContainer {
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+
+    /* Adjust tab styles for small screens */
+    .tab {
+        font-size: 12px;
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+
+    /* Adjust images */
     .bookmark {
         width: 80px;
         height: 80px;
     }
 
-    .tab {
-        font-size: 12px;
-        padding: 5px 10px;
+    .bookmark img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
+    /* Resize buttons for mobile */
+    input, button, a {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    /* Adjust arrows for scrolling */
     .arrow {
-        font-size: 16px;
-        padding: 5px 10px;
+        font-size: 18px;
+        padding: 8px;
     }
 }
